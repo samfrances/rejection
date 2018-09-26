@@ -32,5 +32,9 @@
     "eslint-plugin-promise": "^4.0.0",
     "eslint-plugin-standard": "^3.1.0",
     "riteway": "^2.0.4"
+  },
+  "dependencies": {
+    "cuid": "^2.1.4",
+    "ramda": "^0.25.0"
   }
 }
