@@ -10,8 +10,7 @@ const expectedProps = pickAll([
   'status',
 ]);
 
-describe('src/features/asks/reducer', async should => {
-  const { assert } = should();
+describe('src/features/asks/reducer', async assert => {
 
   assert({
     given: 'no state',

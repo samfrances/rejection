@@ -32,7 +32,7 @@
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.0",
     "eslint-plugin-standard": "^3.1.0",
-    "riteway": "^2.0.4",
+    "riteway": "^3.0.0",
     "watch": "1.0.2"
   },
   "dependencies": {
