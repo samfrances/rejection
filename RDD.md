@@ -2,7 +2,7 @@
 
   - [x] Ability to create an ask.
   - [x] Ability to reject a specific ask.
-  - [ ] Ability to accept a specific ask.
+  - [x] Ability to accept a specific ask.
   - [ ] Ability to update an ask (question and askee).
   - [ ] Display a list of asked questions.
   - [ ] Display a running score.

@@ -2,7 +2,7 @@ import { describe } from 'riteway';
 import { pickAll } from 'ramda';
 
 import { asksReducer as reducer, defaultState } from './reducers';
-import { createAsk, rejectAsk  } from './actions';
+import { createAsk, rejectAsk, acceptAsk } from './actions';
 
 const expectedProps = pickAll([
   'askee',
@@ -74,6 +74,26 @@ describe('src/features/asks/reducer', async assert => {
       should: 'return the existing state, but with the ask status field set to "Rejected"',
       actual: nextState.byId[id].status,
       expected: 'Rejected',
+    });
+  }
+
+  {
+
+    const initialAction = createAsk({ question: 'Can I have a raise?', askee: 'Boss' });
+
+    const startingState = reducer(undefined, initialAction);
+
+    const id = initialAction.payload.id;
+
+    const action = acceptAsk({ id });
+
+    const nextState = reducer(startingState, action);
+
+    assert({
+      given: 'an existing ask, in whatever state, and a accept action',
+      should: 'return the existing state, but with the ask status field set to "Accepted"',
+      actual: nextState.byId[id].status,
+      expected: 'Accepted',
     });
   }
 
