@@ -1,4 +1,4 @@
-import { createAsk } from './actions';
+import { createAsk, rejectAsk } from './actions';
 // Eric Elliott cuid lib
 
 export const defaultState = {
@@ -16,6 +16,18 @@ export const asksReducer = (state = defaultState, action = { type: '' }) => {
       return {
         ...state,
         byId: { ...state.byId, [payload.id]: { ...payload } },
+      };
+
+    case rejectAsk().type:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [payload.id]: {
+            ...state.byId[payload.id],
+            status: 'Rejected',
+          },
+        },
       };
 
     default:
