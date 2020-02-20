@@ -23,7 +23,7 @@ describe("createAsk()", () => {
 
         const testStartTime = Date.now();
 
-        const action = fromActions.createAsk({ id, status, question, askee });
+        const action = fromActions.createAsk({ id, question, askee });
 
         expect(action.payload.timestamp).toBeGreaterThanOrEqual(testStartTime);
 
@@ -31,11 +31,11 @@ describe("createAsk()", () => {
 
     test("omitting id", () => {
 
-        const actionOne = fromActions.createAsk({ status, question, askee, timestamp });
+        const actionOne = fromActions.createAsk({ question, askee, timestamp });
 
         expect(actionOne.payload.id).not.toHaveLength(0);
 
-        const actionTwo = fromActions.createAsk({ status, question, askee, timestamp });
+        const actionTwo = fromActions.createAsk({ question, askee, timestamp });
 
         expect(actionTwo.payload.id).not.toHaveLength(0);
 
@@ -45,7 +45,7 @@ describe("createAsk()", () => {
 
     test("should be annotated with its type", () => {
 
-        expect(fromActions.createAsk.type).toEqual(fromActions.createAsk({ status, question, askee}).type);
+        expect(fromActions.createAsk.type).toEqual(fromActions.createAsk({ question, askee}).type);
 
     });
 
