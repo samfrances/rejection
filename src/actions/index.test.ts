@@ -50,3 +50,39 @@ describe("createAsk()", () => {
     });
 
 });
+
+describe("approveAsk()", () => {
+
+    test("action creator", () => {
+
+        const payload = { id: "jjhfaso" };
+        expect(fromActions.approveAsk(payload))
+            .toEqual({ type: fromActions.APPROVE_ASK, payload });
+
+    });
+
+    test("should be annotated with its type", () => {
+
+        expect(fromActions.approveAsk.type).toEqual(fromActions.approveAsk({ id: "h" }).type);
+
+    });
+
+});
+
+describe("rejectAsk()", () => {
+
+    test("action creator", () => {
+
+        const payload = { id: "jjhfaso" };
+        expect(fromActions.rejectAsk(payload))
+            .toEqual({ type: fromActions.REJECT_ASK, payload });
+
+    });
+
+    test("should be annotated with its type", () => {
+
+        expect(fromActions.rejectAsk.type).toEqual(fromActions.rejectAsk({ id: "h" }).type);
+
+    });
+
+});

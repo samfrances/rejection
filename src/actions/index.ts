@@ -7,7 +7,7 @@ type Ask = import("../common/types").Ask;
 type Optional<T, K extends string|number|symbol> = Omit<T, K> & Partial<T>;
 
 
-export const CREATE_ASK = "CREATE_ASK";
+export const CREATE_ASK = "REJECTION/CREATE_ASK";
 export const createAsk =
     new ActionCreatorBuilder(CREATE_ASK)
         .withPayloadFactory<Ask, Optional<Ask, "timestamp"|"id">>(
@@ -21,3 +21,14 @@ export const createAsk =
         )
         .build();
 
+export const APPROVE_ASK = "REJECTION/APPROVE_ASK";
+export const approveAsk =
+    new ActionCreatorBuilder(APPROVE_ASK)
+        .withPayload<{ id: string }>()
+        .build();
+
+export const REJECT_ASK = "REJECTION/APPROVE_ASK";
+export const rejectAsk =
+    new ActionCreatorBuilder(REJECT_ASK)
+        .withPayload<{ id: string }>()
+        .build();

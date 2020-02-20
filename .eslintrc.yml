@@ -7,6 +7,14 @@ rules:
   # Typescript
   "@typescript-eslint/explicit-function-return-type": off
   "@typescript-eslint/no-unused-vars": error
+  "@typescript-eslint/member-delimiter-style":
+    - error
+    - multiline:
+        delimiter: semi
+        requireLast: true
+      singleline:
+        delimiter: semi
+        requireLast: false
   # Es
   semi: error
 
