@@ -24,20 +24,6 @@ export class ActionCreatorBuilder<TType> {
         creator.type = this.type;
         return creator;
     }
-
-    private static PayloadBuilder = class<TType, TPayload = {}>{
-        constructor(
-            private type: TType
-        ) {}
-
-        public build() {
-            const creator =
-                (payload: TPayload): {type: TType; payload: TPayload} => ({type: this.type, payload });
-            creator.type = this.type;
-            return creator;
-        }
-
-    }
 }
 
 class PayloadActionCreatorBuilder<TType, TPayload = {}>{
