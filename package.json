@@ -19,6 +19,7 @@
     "@typescript-eslint/parser": "^2.20.0",
     "eslint": "^6.8.0",
     "eslint-config-react-app": "^5.2.0",
+    "madge": "^3.7.0",
     "react-scripts": "3.4.0",
     "typescript": "~3.7.2"
   },
@@ -27,7 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "yarn eslint src/ --ext .ts,.tsx"
+    "lint": "yarn eslint src/ --ext .ts,.tsx",
+    "circular": "madge --circular src/index.tsx && madge --image module_graph.svg src/index.tsx"
   },
   "browserslist": {
     "production": [
