@@ -3,13 +3,13 @@ import { AskStatus } from "../common/types";
 
 describe("createAsk()", () => {
 
-    test("explicitly providing all fields", () => {
+    const id = "asdfah";
+    const timestamp = 1582219114;
+    const status = AskStatus.Unanswered;
+    const question = "Can I have a Sega Megadrive please Mum";
+    const askee = "Me";
 
-        const id = "asdfah";
-        const timestamp = 1582219114;
-        const status = AskStatus.Unanswered;
-        const question = "Can I have a Sega Megadrive please Mum";
-        const askee = "Me";
+    test("explicitly providing all fields", () => {
 
         const payload = { id, timestamp, status, question, askee };
 
@@ -23,11 +23,6 @@ describe("createAsk()", () => {
 
         const testStartTime = Date.now();
 
-        const id = "asdfah";
-        const status = AskStatus.Unanswered;
-        const question = "Can I have a Sega Megadrive please Mum";
-        const askee = "Me";
-
         const action = fromActions.createAsk({ id, status, question, askee });
 
         expect(action.payload.timestamp).toBeGreaterThanOrEqual(testStartTime);
@@ -35,11 +30,6 @@ describe("createAsk()", () => {
     });
 
     test("omitting id", () => {
-
-        const timestamp = 1582219114;
-        const status = AskStatus.Unanswered;
-        const question = "Can I have a Sega Megadrive please Mum";
-        const askee = "Me";
 
         const actionOne = fromActions.createAsk({ status, question, askee, timestamp });
 
@@ -54,10 +44,6 @@ describe("createAsk()", () => {
     });
 
     test("should be annotated with its type", () => {
-
-        const status = AskStatus.Unanswered;
-        const question = "Can I have a Sega Megadrive please Mum";
-        const askee = "Me";
 
         expect(fromActions.createAsk.type).toEqual(fromActions.createAsk({ status, question, askee}).type);
 
