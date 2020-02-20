@@ -116,10 +116,30 @@ describe("asks() reducer", () => {
 
         });
 
-        test("should not update non-existent asks", () => {
+        test("should not update non-existent asks via approveAsk()", () => {
 
             const id = "blahblah";
             const state = asks(stateWithTwoAsks, fromActions.approveAsk({ id }));
+
+            expect(getAskById(state, id)).toBeUndefined();
+            expect(getAskById(state, askIdOne)!.status).toEqual(AskStatus.Unanswered);
+            expect(getAskById(state, askIdTwo)!.status).toEqual(AskStatus.Unanswered);
+
+        });
+
+        test("should facilitate rejecting an ask", () => {
+
+            const state = asks(stateWithTwoAsks, fromActions.rejectAsk({ id: askIdOne }));
+
+            expect(getAskById(state, askIdOne)!.status).toEqual(AskStatus.Rejected);
+            expect(getAskById(state, askIdTwo)!.status).toEqual(AskStatus.Unanswered);
+
+        });
+
+        test("should not update non-existent asks via rejectAsk()", () => {
+
+            const id = "blahblah";
+            const state = asks(stateWithTwoAsks, fromActions.rejectAsk({ id }));
 
             expect(getAskById(state, id)).toBeUndefined();
             expect(getAskById(state, askIdOne)!.status).toEqual(AskStatus.Unanswered);

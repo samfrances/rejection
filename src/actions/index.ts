@@ -31,7 +31,7 @@ export const approveAsk =
         .withPayload<{ id: string }>()
         .build();
 
-export const REJECT_ASK: "REJECTION/APPROVE_ASK" = "REJECTION/APPROVE_ASK";
+export const REJECT_ASK: "REJECTION/REJECT_ASK" = "REJECTION/REJECT_ASK";
 export const rejectAsk =
     new ActionCreatorBuilder(REJECT_ASK)
         .withPayload<{ id: string }>()
