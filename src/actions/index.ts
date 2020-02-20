@@ -12,31 +12,30 @@ export type AsksAction =
     | ReturnType<typeof rejectAsk>
     | ReturnType<typeof nullAction>;
 
-export const CREATE_ASK = "REJECTION/CREATE_ASK";
+export const CREATE_ASK: "REJECTION/CREATE_ASK" = "REJECTION/CREATE_ASK";
 export const createAsk =
     new ActionCreatorBuilder(CREATE_ASK)
-        .withPayloadFactory<Ask, Optional<Ask, "timestamp"|"id">>(
+        .withPayloadFactory<Ask, Optional<Omit<Ask, "status">, "timestamp"|"id">>(
             ({
                 question,
                 askee,
-                status = AskStatus.Unanswered,
                 timestamp = Date.now(),
                 id = cuid()
-            }) => ({ question, askee, status, timestamp, id })
+            }) => ({ question, askee, timestamp, id, status: AskStatus.Unanswered })
         )
         .build();
 
-export const APPROVE_ASK = "REJECTION/APPROVE_ASK";
+export const APPROVE_ASK: "REJECTION/APPROVE_ASK" = "REJECTION/APPROVE_ASK";
 export const approveAsk =
     new ActionCreatorBuilder(APPROVE_ASK)
         .withPayload<{ id: string }>()
         .build();
 
-export const REJECT_ASK = "REJECTION/APPROVE_ASK";
+export const REJECT_ASK: "REJECTION/APPROVE_ASK" = "REJECTION/APPROVE_ASK";
 export const rejectAsk =
     new ActionCreatorBuilder(REJECT_ASK)
         .withPayload<{ id: string }>()
         .build();
 
-export const NULL_ACTION = "REJECTION/NULL";
+export const NULL_ACTION: "REJECTION/NULL" = "REJECTION/NULL";
 export const nullAction = new ActionCreatorBuilder(NULL_ACTION).build();
