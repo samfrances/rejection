@@ -6,6 +6,11 @@ import { ActionCreatorBuilder } from "./utils";
 type Ask = import("../common/types").Ask;
 type Optional<T, K extends string|number|symbol> = Omit<T, K> & Partial<T>;
 
+export type AsksAction =
+    | ReturnType<typeof createAsk>
+    | ReturnType<typeof approveAsk>
+    | ReturnType<typeof rejectAsk>
+    | ReturnType<typeof nullAction>;
 
 export const CREATE_ASK = "REJECTION/CREATE_ASK";
 export const createAsk =
@@ -32,3 +37,6 @@ export const rejectAsk =
     new ActionCreatorBuilder(REJECT_ASK)
         .withPayload<{ id: string }>()
         .build();
+
+export const NULL_ACTION = "REJECTION/NULL";
+export const nullAction = new ActionCreatorBuilder(NULL_ACTION).build();
