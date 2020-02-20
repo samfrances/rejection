@@ -1,4 +1,5 @@
 import * as fromActions from "../actions";
+import { AskStatus } from "../common/types";
 
 type Ask = import("../common/types").Ask;
 type AsksAction = import("../actions").AsksAction
@@ -16,7 +17,7 @@ export default function asks(
 ) {
     switch (action.type) {
         case fromActions.createAsk.type: {
-            const id = action.payload.id;
+            const { id } = action.payload;
             if (state.byId[id]) {
                 return state;
             }
@@ -29,6 +30,21 @@ export default function asks(
                 allIds: [ ...state.allIds, id ]
             };
         }
+
+        case fromActions.approveAsk.type: {
+            const { id } = action.payload;
+            if (!getAskById(state, id)) {
+                return state;
+            }
+            return {
+                ...state,
+                byId: {
+                    ...state.byId,
+                    [id]: {...state.byId[id], status: AskStatus.Accepted }
+                }
+            };
+        }
+
         default:
             return state;
     }

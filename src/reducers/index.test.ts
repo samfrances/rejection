@@ -83,10 +83,50 @@ describe("asks() reducer", () => {
         const state = [
             fromActions.createAsk(askOne),
             fromActions.createAsk(askTwo),
-         ].reduce(asks, initialState);
+        ].reduce(asks, initialState);
 
         expect(getAskById(state, askOne.id))
             .toEqual({ ...askOne, status: AskStatus.Unanswered });
         expect(getAskCount(state)).toEqual(1);
     });
+
+    {
+        const askIdOne = "hhhh";
+        const askIdTwo = "iiii";
+        const stateWithTwoAsks =
+            [
+                fromActions.createAsk({
+                    id: askIdOne,
+                    question: "Can I have a raise?",
+                    askee: "Bob",
+                }),
+                fromActions.createAsk({
+                    id: askIdTwo,
+                    question: "Can I have a biscuit?",
+                    askee: "Ben",
+                }),
+            ].reduce(asks, initialState);
+
+        test("should facilitate accepting an ask", () => {
+
+            const state = asks(stateWithTwoAsks, fromActions.approveAsk({ id: askIdOne }));
+
+            expect(getAskById(state, askIdOne)!.status).toEqual(AskStatus.Accepted);
+            expect(getAskById(state, askIdTwo)!.status).toEqual(AskStatus.Unanswered);
+
+        });
+
+        test("should not update non-existent asks", () => {
+
+            const id = "blahblah";
+            const state = asks(stateWithTwoAsks, fromActions.approveAsk({ id }));
+
+            expect(getAskById(state, id)).toBeUndefined();
+            expect(getAskById(state, askIdOne)!.status).toEqual(AskStatus.Unanswered);
+            expect(getAskById(state, askIdTwo)!.status).toEqual(AskStatus.Unanswered);
+
+        });
+    }
+
+
 });
