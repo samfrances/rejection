@@ -3,7 +3,7 @@ import { render, fireEvent } from "@testing-library/react";
 import NewAskForm from "./NewAskForm";
 
 test("renders an input for the ask question", () => {
-  const { getByTestId } = render(<NewAskForm />);
+  const { getByTestId } = render(<NewAskForm onSubmitAsk={jest.fn()} />);
   const inputElement = getByTestId("question-input");
   expect(inputElement).toBeInTheDocument();
   expect(inputElement.getAttribute("type")).toEqual("text");
@@ -12,7 +12,7 @@ test("renders an input for the ask question", () => {
 });
 
 test("renders an input for the askee", () => {
-  const { getByTestId } = render(<NewAskForm />);
+  const { getByTestId } = render(<NewAskForm onSubmitAsk={jest.fn()} />);
   const inputElement = getByTestId("askee-input");
   expect(inputElement).toBeInTheDocument();
   expect(inputElement.getAttribute("type")).toEqual("text");
@@ -21,7 +21,7 @@ test("renders an input for the askee", () => {
 });
 
 test("renders submit button", () => {
-  const { getByTestId } = render(<NewAskForm />);
+  const { getByTestId } = render(<NewAskForm onSubmitAsk={jest.fn()} />);
   const inputElement = getByTestId("ask-submit");
   expect(inputElement).toBeInTheDocument();
   expect(inputElement.getAttribute("type")).toEqual("submit");
@@ -29,7 +29,7 @@ test("renders submit button", () => {
 });
 
 test("empties the text inputs after submitting", async () => {
-  const { getByTestId } = render(<NewAskForm />);
+  const { getByTestId } = render(<NewAskForm onSubmitAsk={jest.fn()} />);
   const questionInput = getByTestId("question-input");
   const askeeInput = getByTestId("askee-input");
   const submitInput = getByTestId("ask-submit");
@@ -41,4 +41,24 @@ test("empties the text inputs after submitting", async () => {
 
   expect((questionInput as HTMLInputElement).value).toEqual("");
   expect((askeeInput as HTMLInputElement).value).toEqual("");
+});
+
+test("calls onSubmitAsk callback when form submitted", async () => {
+  const onSubmitAsk = jest.fn();
+
+  const { getByTestId } = render(<NewAskForm onSubmitAsk={onSubmitAsk} />);
+  const questionInput = getByTestId("question-input");
+  const askeeInput = getByTestId("askee-input");
+  const submitInput = getByTestId("ask-submit");
+
+  const ask = "Hello";
+  const askee = "Bob";
+
+  fireEvent.change(questionInput, { target: { value: ask }});
+  fireEvent.change(askeeInput, { target: { value: askee }});
+
+  fireEvent.click(submitInput);
+
+  expect(onSubmitAsk).toHaveBeenCalledWith(ask, askee);
+
 });

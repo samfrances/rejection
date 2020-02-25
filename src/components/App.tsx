@@ -16,7 +16,7 @@ function App() {
       </header>
       <div className="row">
         <div className="twelve columns">
-          <NewAskForm />
+          <NewAskForm onSubmitAsk={() => {}} />
         </div>
       </div>
       <div className="row">

@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 
-export default function NewAskForm() {
+
+interface Props {
+  onSubmitAsk: (question: string, askee: string) => void
+}
+
+export default function NewAskForm({ onSubmitAsk }: Props) {
   const [question, setQuestion] = useState("");
   const [askee, setAskee] = useState("");
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    onSubmitAsk(question, askee);
     setQuestion("");
     setAskee("");
   };
