@@ -6,3 +6,7 @@
 .App .new-ask-form {
     text-align: center;
 }
+
+.errors {
+    color: red;
+}
