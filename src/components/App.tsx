@@ -1,18 +1,29 @@
 import React from 'react';
 import '../css/normalize.css';
 import '../css/skeleton.css';
+import "../css/App.css";
 
 import NewAskForm from "./NewAskForm";
 import AsksList from "./AsksList";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1 data-testid="title">Rejection App</h1>
+    <div className="App container">
+      <header className="App-header row">
+        <div className="twelve columns">
+          <h1 data-testid="title">Rejection App</h1>
+        </div>
       </header>
-      <NewAskForm />
-      <AsksList />
+      <div className="row">
+        <div className="twelve columns">
+          <NewAskForm />
+        </div>
+      </div>
+      <div className="row">
+        <div className="twelve columns">
+          <AsksList />
+        </div>
+      </div>
     </div>
   );
 }

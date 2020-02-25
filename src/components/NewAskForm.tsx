@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function NewAskForm() {
   return (
-    <form data-testid="new-ask-form">
+    <form data-testid="new-ask-form" className="new-ask-form">
       <input
         type="text"
         placeholder="What do you want to ask for?"
