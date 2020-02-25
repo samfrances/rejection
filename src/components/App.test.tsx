@@ -1,9 +1,16 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("renders rejection app header", () => {
+  const { getByTestId } = render(<App />);
+  const titleElement = getByTestId("title");
+  expect(titleElement).toBeInTheDocument();
+  expect(titleElement.textContent.toLowerCase()).toEqual("rejection app")
 });
+
+test("renders a form for adding new asks", () => {
+    const { container } = render(<App />);
+    const formElement = container.querySelector(`form[data-testid="new-ask-form"]`)
+    expect(formElement).toBeInTheDocument();
+})
