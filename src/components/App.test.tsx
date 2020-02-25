@@ -10,7 +10,13 @@ test("renders rejection app header", () => {
 });
 
 test("renders a form for adding new asks", () => {
-    const { container } = render(<App />);
-    const formElement = container.querySelector(`form[data-testid="new-ask-form"]`)
-    expect(formElement).toBeInTheDocument();
+  const { container } = render(<App />);
+  const formElement = container.querySelector(`form[data-testid="new-ask-form"]`)
+  expect(formElement).toBeInTheDocument();
 })
+
+test("renders the component containing a list of asks", () => {
+  const { getByTestId } = render(<App />);
+  const titleElement = getByTestId("asks-list");
+  expect(titleElement).toBeInTheDocument();
+});
