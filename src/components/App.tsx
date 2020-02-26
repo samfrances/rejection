@@ -3,12 +3,13 @@ import '../css/normalize.css';
 import '../css/skeleton.css';
 import "../css/App.css";
 
-import reducer, { initialState, getAllAsks } from "../reducers";
+import reducer, { initialState, getAllAsks, score } from "../reducers";
 import * as fromActions from "../actions";
 import { TestIDs } from "./constants";
 
 import NewAskForm from "./NewAskForm";
 import AsksList from "./AsksList";
+import Score from "./Score";
 
 function App() {
 
@@ -35,6 +36,11 @@ function App() {
       <div className="row">
         <div className="twelve columns">
           <NewAskForm onSubmitAsk={onSubmitAsk} />
+        </div>
+      </div>
+      <div className="row">
+        <div className="twelve columns">
+          <Score score={score(state)} />
         </div>
       </div>
       <div className="row">

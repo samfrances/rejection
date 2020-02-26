@@ -85,5 +85,5 @@ export function* getAllAsks(state: AsksState): Generator<Ask> {
 }
 
 export function score(state: AsksState) {
-    ask.getScore([...getAllAsks(state)]);
+    return ask.getScore([...getAllAsks(state)]);
 }

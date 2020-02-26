@@ -14,6 +14,42 @@ function setup() {
   const questionInput = () => getByTestId(TestIDs.QuestionInput);
   const askeeInput = () => getByTestId(TestIDs.AskeeInput);
   const submitAskInput = () => getByTestId(TestIDs.AskSubmit);
+  const scoreElement = () => getByTestId(TestIDs.Score);
+  const score = () => scoreElement()!.querySelector(".score")!.textContent;
+
+  const getAskByQuestionText = (text: string) =>
+    getByText(text).parentElement!;
+  const acceptAskByQuestionText = (text: string) => {
+    const ask = getAskByQuestionText(text);
+    fireEvent.click(ask.querySelector("button.accept")!);
+  };
+
+  const rejectAskByQuestionText = (text: string) => {
+    const ask = getAskByQuestionText(text);
+    fireEvent.click(ask.querySelector("button.reject")!);
+  };
+
+  const getAskStatusByQuestionText = (text: string) => {
+    const askStatus = getAskByQuestionText(text).querySelector(".ask-status")!;
+    const classList = [...askStatus.classList];
+    if (
+      classList.includes(AskStatus.Accepted)
+      || classList.includes(AskStatus.Rejected)
+    ) {
+      return askStatus.textContent;
+    }
+
+    if (classList.includes(AskStatus.Unanswered)) {
+      return AskStatus.Unanswered;
+    }
+  };
+
+  const submitAsk = (question: string, askee: string) => {
+    fireEvent.change(questionInput(), { target: { value: question }});
+    fireEvent.change(askeeInput(), { target: { value: askee }});
+    fireEvent.click(submitAskInput());
+  };
+
 
   return {
     getByText,
@@ -21,9 +57,12 @@ function setup() {
     titleElement,
     newAskForm,
     asksList,
-    questionInput,
-    askeeInput,
-    submitAskInput,
+    scoreElement,
+    score,
+    acceptAskByQuestionText,
+    rejectAskByQuestionText,
+    getAskStatusByQuestionText,
+    submitAsk,
   };
 }
 
@@ -46,16 +85,12 @@ test("renders the component containing a list of asks", () => {
 
 test("renders adding an ask", () => {
 
-  const {
-    questionInput, askeeInput, submitAskInput: submitInput, getByText
-  } = setup();
+  const { submitAsk, getByText } = setup();
 
   const ask = "Can I have a cat?";
   const askee = "Landlord";
 
-  fireEvent.change(questionInput(), { target: { value: ask }});
-  fireEvent.change(askeeInput(), { target: { value: askee }});
-  fireEvent.click(submitInput());
+  submitAsk(ask, askee);
 
   const renderedAsk = getByText(ask);
   expect(renderedAsk).toBeInTheDocument();
@@ -64,23 +99,17 @@ test("renders adding an ask", () => {
 
 test("renders adding multiple asks", () => {
 
-  const {
-    questionInput, askeeInput, submitAskInput: submitInput, getByText
-  } = setup();
+  const { submitAsk, getByText } = setup();
 
   const askOne = "Can I have a cat?";
   const askeeOne = "Landlord";
 
-  fireEvent.change(questionInput(), { target: { value: askOne }});
-  fireEvent.change(askeeInput(), { target: { value: askeeOne }});
-  fireEvent.click(submitInput());
+  submitAsk(askOne, askeeOne);
 
   const askTwo = "Can we go to the zoo?";
   const askeeTwo = "Bob";
 
-  fireEvent.change(questionInput(), { target: { value: askTwo }});
-  fireEvent.change(askeeInput(), { target: { value: askeeTwo }});
-  fireEvent.click(submitInput());
+  submitAsk(askTwo, askeeTwo);
 
   expect(getByText(askOne)).toBeInTheDocument();
   expect(getByText(askTwo)).toBeInTheDocument();
@@ -90,42 +119,87 @@ test("renders adding multiple asks", () => {
 test("renders correctly after accepting and rejecting", () => {
 
   const {
-    questionInput, askeeInput, submitAskInput: submitInput, getByText
+    submitAsk, rejectAskByQuestionText, acceptAskByQuestionText,
+    getAskStatusByQuestionText,
   } = setup();
 
   const askOne = "Can I have a cat?";
   const askeeOne = "Landlord";
 
-  fireEvent.change(questionInput(), { target: { value: askOne }});
-  fireEvent.change(askeeInput(), { target: { value: askeeOne }});
-  fireEvent.click(submitInput());
+  submitAsk(askOne, askeeOne);
 
   const askTwo = "Can we go to the zoo?";
   const askeeTwo = "Bob";
 
-  fireEvent.change(questionInput(), { target: { value: askTwo }});
-  fireEvent.change(askeeInput(), { target: { value: askeeTwo }});
-  fireEvent.click(submitInput());
-
-  const renderedAskOne = getByText(askOne).parentElement!;
-  const renderedAskTwo = getByText(askTwo).parentElement!;
+  submitAsk(askTwo, askeeTwo);
 
   // Reject the first ask
-  fireEvent.click(renderedAskOne.querySelector("button.reject")!);
+  rejectAskByQuestionText(askOne);
 
   // Check result
-  expect(renderedAskOne.querySelector(".ask-status")!.textContent)
+  expect(getAskStatusByQuestionText(askOne))
     .toBe(AskStatus.Rejected);
-  expect(renderedAskTwo.querySelector(".ask-status")!.classList)
+  expect(getAskStatusByQuestionText(askTwo))
     .toContain(AskStatus.Unanswered);
 
   // Accept the second ask
-  fireEvent.click(renderedAskTwo.querySelector("button.accept")!);
+  acceptAskByQuestionText(askTwo);
 
   // Check the results
-  expect(renderedAskTwo.querySelector(".ask-status")!.textContent)
+  expect(getAskStatusByQuestionText(askTwo))
     .toBe(AskStatus.Accepted);
-  expect(renderedAskOne.querySelector(".ask-status")!.textContent)
+  expect(getAskStatusByQuestionText(askOne))
     .toBe(AskStatus.Rejected);
+
+});
+
+describe("renders the score", () => {
+
+  test("to start with", () => {
+    const { scoreElement } = setup();
+    expect(scoreElement().textContent).toEqual("Score: 0");
+  });
+
+  test("after adding and accepting/rejecting asks", () => {
+
+    const {
+      submitAsk, acceptAskByQuestionText, rejectAskByQuestionText,
+      score: scoreInDom
+    } = setup();
+
+    // Submit first ask
+    const askOne = "Can I have a cat?";
+    submitAsk(askOne, "Landlord");
+
+    expect(scoreInDom()).toEqual("0");
+
+    // Submit second ask
+    const askTwo = "Can we go to the zoo?";
+    submitAsk(askTwo, "Bob");
+
+    expect(scoreInDom()).toEqual("0");
+
+    // Accept ask two
+    acceptAskByQuestionText(askTwo);
+
+    expect(scoreInDom()).toEqual("1");
+
+    // Submit a third ask
+    const askThree = "Can I leave work early today?";
+    submitAsk(askThree, "Boss");
+
+    expect(scoreInDom()).toEqual("1");
+
+    // Reject ask askThree
+    rejectAskByQuestionText(askThree);
+
+    expect(scoreInDom()).toEqual("11");
+
+    // Reject askOne
+    rejectAskByQuestionText(askOne);
+
+    expect(scoreInDom()).toEqual("21");
+
+  });
 
 });

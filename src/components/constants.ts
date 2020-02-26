@@ -9,4 +9,5 @@ export enum TestIDs {
     AskSubmit = "ask-submit",
     QuestionError = "question-error",
     AskeeError = "askee-error",
+    Score = "score",
 }
