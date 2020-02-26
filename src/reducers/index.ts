@@ -1,7 +1,8 @@
 import * as fromActions from "../actions";
-import { AskStatus } from "../common/types";
+import * as ask from "../common/ask";
+import { AskStatus } from "../common/ask";
 
-type Ask = import("../common/types").Ask;
+type Ask = import("../common/ask").Ask;
 type AsksAction = import("../actions").AsksAction
 
 interface AsksState {
@@ -81,4 +82,8 @@ export function* getAllAsks(state: AsksState): Generator<Ask> {
             yield ask;
         }
     }
+}
+
+export function score(state: AsksState) {
+    ask.getScore([...getAllAsks(state)]);
 }

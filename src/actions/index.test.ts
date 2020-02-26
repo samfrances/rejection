@@ -1,5 +1,5 @@
 import * as fromActions from "./index";
-import { AskStatus } from "../common/types";
+import { AskStatus } from "../common/ask";
 
 describe("createAsk()", () => {
 

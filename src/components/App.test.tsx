@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 
 import App from "./App";
-import { AskStatus } from "../common/types";
+import { AskStatus } from "../common/ask";
 import { TestIDs } from "./constants";
 
 function setup() {

@@ -3,7 +3,7 @@ import  cuid from "cuid";
 import { render, fireEvent } from "@testing-library/react";
 
 import AsksList from "./AsksList";
-import { Ask, AskStatus } from "../common/types";
+import { Ask, AskStatus } from "../common/ask";
 import { TestIDs } from "./constants";
 
 const asks: Ask[] = [

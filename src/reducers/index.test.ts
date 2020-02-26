@@ -1,9 +1,9 @@
 import * as fromActions from "../actions";
 import asks from "./index";
 import { getAskById, getAskCount } from "./index";
-import { AskStatus } from "../common/types";
+import { AskStatus } from "../common/ask";
 
-type Ask = import("../common/types").Ask;
+type Ask = import("../common/ask").Ask;
 
 
 describe("asks() reducer", () => {
@@ -147,6 +147,5 @@ describe("asks() reducer", () => {
 
         });
     }
-
 
 });

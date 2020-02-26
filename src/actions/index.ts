@@ -1,9 +1,9 @@
 import  cuid from "cuid";
 
-import { AskStatus } from "../common/types";
+import { AskStatus } from "../common/ask";
 import { ActionCreatorBuilder } from "./utils";
 
-type Ask = import("../common/types").Ask;
+type Ask = import("../common/ask").Ask;
 type Optional<T, K extends string|number|symbol> = Omit<T, K> & Partial<T>;
 
 export type AsksAction =
