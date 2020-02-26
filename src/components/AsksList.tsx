@@ -1,16 +1,17 @@
 import React from 'react';
 
 import { Ask, AskStatus } from "../common/types";
+import { TestIDs } from "./constants";
 
 interface Props {
     asks: Ask[];
-    reject: (id: string) => void;
-    accept: (id: string) => void;
+    reject: (askId: string) => void;
+    accept: (askId: string) => void;
 }
 
 export default function AsksList({ asks, reject, accept }: Props) {
   return (
-    <div data-testid="asks-list">
+    <div data-testid={TestIDs.AsksList} className="asks-list">
       <table>
         <tbody>
         {
@@ -21,7 +22,7 @@ export default function AsksList({ asks, reject, accept }: Props) {
               <td className="ask-date">{new Date(ask.timestamp).toLocaleString()}</td>
               <td className={`ask-status ${ask.status}`}>
                 {
-                  ask.status == AskStatus.Unanswered
+                  ask.status === AskStatus.Unanswered
                     ? (
                       <React.Fragment>
                         <button

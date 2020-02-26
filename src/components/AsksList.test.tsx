@@ -41,21 +41,21 @@ function setup() {
   const renderedAskee = (askId: string) => {
     const ask = renderedAsk(askId);
     return ask.querySelector(".ask-askee");
-  }
+  };
   const renderedAskDate = (askId: string) => {
     const ask = renderedAsk(askId);
     return ask.querySelector(".ask-date");
-  }
+  };
   const renderedAskStatus = (askId: string) => {
     const ask = renderedAsk(askId);
     return ask.querySelector(".ask-status");
-  }
+  };
   const acceptButton = (askId: string) => {
     return renderedAskStatus(askId)!.querySelector("button.accept");
-  }
+  };
   const rejectButton = (askId: string) => {
     return renderedAskStatus(askId)!.querySelector("button.reject");
-  }
+  };
 
   return {
     accept,
@@ -141,7 +141,7 @@ describe("renders the ask status, if answered", () => {
 
 describe("renders buttons to set ask status, if not answered", () => {
 
-  for (const ask of asks.filter(a => a.status == AskStatus.Unanswered)) {
+  for (const ask of asks.filter(a => a.status === AskStatus.Unanswered)) {
     test(ask.question, () => {
 
       const { renderedAskStatus, acceptButton, rejectButton } = setup();
@@ -162,7 +162,7 @@ describe("renders buttons to set ask status, if not answered", () => {
 });
 
 describe("reject button should call reject callback", () => {
-  for (const ask of asks.filter(a => a.status == AskStatus.Unanswered)) {
+  for (const ask of asks.filter(a => a.status === AskStatus.Unanswered)) {
     test(ask.question, () => {
 
       const { rejectButton, reject: rejectCallback } = setup();
@@ -177,7 +177,7 @@ describe("reject button should call reject callback", () => {
 });
 
 describe("accept button should call accept callback", () => {
-  for (const ask of asks.filter(a => a.status == AskStatus.Unanswered)) {
+  for (const ask of asks.filter(a => a.status === AskStatus.Unanswered)) {
     test(ask.question, () => {
 
       const { acceptButton, accept: acceptCallback } = setup();

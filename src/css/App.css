@@ -10,3 +10,7 @@
 .errors {
     color: red;
 }
+
+.asks-list table {
+    margin: 0 auto;
+}

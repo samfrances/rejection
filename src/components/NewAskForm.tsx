@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { TestIDs } from "./constants";
 
 interface Props {
   onSubmitAsk: (question: string, askee: string) => void;
@@ -40,7 +41,7 @@ export default function NewAskForm({ onSubmitAsk }: Props) {
 
   return (
     <form
-      data-testid="new-ask-form"
+      data-testid={TestIDs.NewAskForm}
       className="new-ask-form"
       onSubmit={onSubmit}>
 
@@ -49,20 +50,20 @@ export default function NewAskForm({ onSubmitAsk }: Props) {
         placeholder="What do you want to ask for?"
         value={question}
         onChange={e => { setQuestion(e.target.value); }}
-        data-testid="question-input" />
+        data-testid={TestIDs.QuestionInput} />
       <input
         type="text"
         placeholder="Who are you asking?"
         value={askee}
         onChange={e => { setAskee(e.target.value); }}
-        data-testid="askee-input"/>
+        data-testid={TestIDs.AskeeInput} />
       <input
         type="submit"
         value="Ask!"
-        data-testid="ask-submit" />
+        data-testid={TestIDs.AskSubmit} />
       <ul className="errors">
-        {questionError ? <li data-testid="question-error">{questionError}</li> : null}
-        {askeeError ? <li data-testid="askee-error">{askeeError}</li> : null}
+        {questionError ? <li data-testid={TestIDs.QuestionError}>{questionError}</li> : null}
+        {askeeError ? <li data-testid={TestIDs.AskeeError}>{askeeError}</li> : null}
       </ul>
     </form>
   );

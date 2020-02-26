@@ -17,4 +17,5 @@ rules:
         requireLast: false
   # Es
   semi: error
+  eqeqeq: error
 

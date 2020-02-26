@@ -30,6 +30,10 @@ export default function asks(
     }
 }
 
+export function initialState() {
+    return asks(undefined, fromActions.nullAction());
+}
+
 function addAsk(state: AsksState, ask: Ask) {
     const { id } = ask;
     if (state.byId[id]) {
@@ -64,4 +68,17 @@ export function getAskById(state: AsksState, id: string): Ask|undefined {
 
 export function getAskCount(state: AsksState): number {
     return state.allIds.length;
+}
+
+function getAskIds(state: AsksState) {
+    return state.allIds;
+}
+
+export function* getAllAsks(state: AsksState): Generator<Ask> {
+    for (const askId of getAskIds(state)) {
+        const ask = getAskById(state, askId);
+        if (ask) {
+            yield ask;
+        }
+    }
 }

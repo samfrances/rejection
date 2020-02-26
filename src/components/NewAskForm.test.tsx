@@ -1,15 +1,17 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
+
 import NewAskForm from "./NewAskForm";
+import { TestIDs } from "./constants";
 
 function setup() {
   const onSubmitAsk = jest.fn();
   const { getByTestId } = render(<NewAskForm onSubmitAsk={onSubmitAsk} />);
-  const questionInput = () => getByTestId("question-input");
-  const askeeInput = () => getByTestId("askee-input");
-  const submitInput = () => getByTestId("ask-submit");
-  const questionError = () => getByTestId("question-error");
-  const askeeError = () => getByTestId("askee-error");
+  const questionInput = () => getByTestId(TestIDs.QuestionInput);
+  const askeeInput = () => getByTestId(TestIDs.AskeeInput);
+  const submitInput = () => getByTestId(TestIDs.AskSubmit);
+  const questionError = () => getByTestId(TestIDs.QuestionError);
+  const askeeError = () => getByTestId(TestIDs.AskeeError);
 
   return {
     questionInput,
