@@ -1,5 +1,7 @@
 import React from 'react';
 
+import "../css/AsksList.css";
+
 import { Ask, AskStatus } from "../common/types";
 import { TestIDs } from "./constants";
 

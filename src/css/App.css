@@ -3,14 +3,6 @@
     text-align: center;
 }
 
-.App .new-ask-form {
-    text-align: center;
-}
-
-.errors {
-    color: red;
-}
-
-.asks-list table {
-    margin: 0 auto;
+button {
+    margin: 0 10px;
 }

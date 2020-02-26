@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import "../css/NewAskForm.css";
+
 import { TestIDs } from "./constants";
 
 interface Props {
@@ -60,7 +62,8 @@ export default function NewAskForm({ onSubmitAsk }: Props) {
       <input
         type="submit"
         value="Ask!"
-        data-testid={TestIDs.AskSubmit} />
+        data-testid={TestIDs.AskSubmit}
+        className="button-primary" />
       <ul className="errors">
         {questionError ? <li data-testid={TestIDs.QuestionError}>{questionError}</li> : null}
         {askeeError ? <li data-testid={TestIDs.AskeeError}>{askeeError}</li> : null}

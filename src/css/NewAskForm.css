@@ -1,0 +1,16 @@
+
+.App .new-ask-form {
+    text-align: center;
+}
+
+.errors {
+    color: red;
+}
+
+.ask-date {
+    font-style: italic;
+}
+
+input {
+    margin: 0 10px;
+}
