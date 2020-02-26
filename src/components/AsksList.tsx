@@ -85,8 +85,8 @@ function AcceptRejectButtons({
 
 function FormattedDate({ timestamp }: { timestamp: number }) {
   return (
-    <React.Fragment>
+    <time dateTime={(new Date(timestamp)).toString()}>
       {new Date(timestamp).toLocaleString()}
-    </React.Fragment>
+    </time>
   );
 }

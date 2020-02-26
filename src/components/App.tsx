@@ -9,7 +9,7 @@ import AppView from "./AppView";
 type Ask = import("../common/ask").Ask;
 type AsksState = import("../reducers").AsksState;
 
-const STORAGE_KEY = "rejection-app"
+export const STORAGE_KEY = "rejection-app"
 
 
 
@@ -55,6 +55,10 @@ function init(initialState: AsksState): AsksState {
 
   const errorMessage = "Saved state was invalid.";
   const asksUnvalidated: Ask[] = JSON.parse(data).asks;
+  if (asksUnvalidated === undefined) {
+    console.error(errorMessage);
+    return initialState;
+  }
 
   // Check if stored asks are any array
   if (typeof asksUnvalidated.filter !== "function") {

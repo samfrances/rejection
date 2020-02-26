@@ -1,11 +1,15 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import cuid from "cuid";
+import { render, fireEvent, cleanup } from "@testing-library/react";
 
-import App from "./App";
+import App, { STORAGE_KEY } from "./App";
 import { AskStatus } from "../common/ask";
 import { TestIDs } from "./constants";
 
+type Ask = import("../common/ask").Ask;
+
 function setup() {
+
   const { getByTestId, container, getByText } = render(<App />);
 
   const titleElement = () => getByTestId(TestIDs.Title);
@@ -16,6 +20,10 @@ function setup() {
   const submitAskInput = () => getByTestId(TestIDs.AskSubmit);
   const scoreElement = () => getByTestId(TestIDs.Score);
   const score = () => scoreElement()!.querySelector(".score")!.textContent;
+
+  const countRenderedAsks = () => {
+    return asksList()!.querySelectorAll("tbody tr").length;
+  }
 
   const getAskByQuestionText = (text: string) =>
     getByText(text).parentElement!;
@@ -44,12 +52,31 @@ function setup() {
     }
   };
 
+  const getAskeeByQuestionText = (text: string) => {
+    return (
+      getAskByQuestionText(text)
+        .querySelector(".ask-askee")!
+        .textContent
+    );
+  }
+
+  const getDateByQuestionText = (text: string) => {
+    return (
+      getAskByQuestionText(text)
+        .querySelector(".ask-date")!
+        .children[0]
+    );
+  }
+
   const submitAsk = (question: string, askee: string) => {
     fireEvent.change(questionInput(), { target: { value: question }});
     fireEvent.change(askeeInput(), { target: { value: askee }});
     fireEvent.click(submitAskInput());
   };
 
+  const getLocalStorageData = () => {
+    return localStorage.getItem(STORAGE_KEY)
+  }
 
   return {
     getByText,
@@ -57,16 +84,26 @@ function setup() {
     titleElement,
     newAskForm,
     asksList,
+    countRenderedAsks,
     scoreElement,
     score,
+
     acceptAskByQuestionText,
     rejectAskByQuestionText,
-    getAskStatusByQuestionText,
     submitAsk,
+
+    getAskByQuestionText,
+    getAskStatusByQuestionText,
+    getAskeeByQuestionText,
+    getDateByQuestionText,
+
+    getLocalStorageData,
   };
 }
 
-afterEach(() => localStorage.clear());
+beforeEach(() => {
+  localStorage.clear();
+})
 
 test("renders rejection app header", () => {
   const { titleElement } = setup();
@@ -203,5 +240,188 @@ describe("renders the score", () => {
     expect(scoreInDom()).toEqual("21");
 
   });
+
+});
+
+test("stores state in localStorage", () => {
+
+  function assertIsAsk(ask: any): asserts ask is Ask {
+    expect(typeof ask.id).toBe("string");
+    expect(typeof ask.timestamp).toBe("number");
+    expect(typeof ask.question).toBe("string");
+    expect(typeof ask.askee).toBe("string");
+    expect(typeof ask.status).toBe("string");
+    expect(Object.values(AskStatus)).toContain(ask.status);
+  }
+
+  const {
+    submitAsk, acceptAskByQuestionText, rejectAskByQuestionText,
+    getLocalStorageData,
+  } = setup();
+
+  {
+    const data = getLocalStorageData();
+    expect(data).not.toBeNull();
+    if (data) {
+      const asks: Ask[] = JSON.parse(data).asks;
+      expect(asks).toHaveLength(0);
+    }
+  }
+
+  // Submit first ask
+  const askOne = "Can I have a cat?";
+  const askeeOne = "Landlord";
+  submitAsk(askOne, askeeOne);
+
+  {
+    const data = getLocalStorageData();
+    expect(data).not.toBeNull();
+    if (data) {
+      const asks: Ask[] = JSON.parse(data).asks;
+      expect(asks).toHaveLength(1);
+
+      const [ ask ] = asks;
+      assertIsAsk(ask);
+
+      expect(ask.question).toBe(askOne);
+      expect(ask.askee).toBe(askeeOne);
+      expect(ask.status).toBe(AskStatus.Unanswered);
+    }
+  }
+
+  // Submit second ask
+  const askTwo = "Can we go to the zoo?";
+  const askeeTwo = "Bob";
+  submitAsk(askTwo, askeeTwo);
+
+  {
+    const data = getLocalStorageData();
+    expect(data).not.toBeNull();
+    if (data) {
+      const asks: Ask[] = JSON.parse(data).asks;
+      expect(asks).toHaveLength(2);
+
+      const [ first, second ] = asks;
+
+      assertIsAsk(first);
+      expect(first.question).toBe(askOne);
+      expect(first.askee).toBe(askeeOne);
+      expect(first.status).toBe(AskStatus.Unanswered);
+
+      assertIsAsk(second);
+      expect(second.question).toBe(askTwo);
+      expect(second.askee).toBe(askeeTwo);
+      expect(second.status).toBe(AskStatus.Unanswered);
+    }
+  }
+
+  // Accept ask two
+  acceptAskByQuestionText(askTwo);
+
+  {
+    const data = getLocalStorageData();
+    expect(data).not.toBeNull();
+    if (data) {
+      const asks: Ask[] = JSON.parse(data).asks;
+      expect(asks).toHaveLength(2);
+
+      const [ first, second ] = asks;
+
+      assertIsAsk(first);
+      expect(first.question).toBe(askOne);
+      expect(first.askee).toBe(askeeOne);
+      expect(first.status).toBe(AskStatus.Unanswered);
+
+      assertIsAsk(second);
+      expect(second.question).toBe(askTwo);
+      expect(second.askee).toBe(askeeTwo);
+      expect(second.status).toBe(AskStatus.Accepted);
+    }
+  }
+
+  // Reject askOne
+  rejectAskByQuestionText(askOne);
+
+  {
+    const data = getLocalStorageData();
+    expect(data).not.toBeNull();
+    if (data) {
+      const asks: Ask[] = JSON.parse(data).asks;
+      expect(asks).toHaveLength(2);
+
+      const [ first, second ] = asks;
+
+      assertIsAsk(first);
+      expect(first.question).toBe(askOne);
+      expect(first.askee).toBe(askeeOne);
+      expect(first.status).toBe(AskStatus.Rejected);
+
+      assertIsAsk(second);
+      expect(second.question).toBe(askTwo);
+      expect(second.askee).toBe(askeeTwo);
+      expect(second.status).toBe(AskStatus.Accepted);
+    }
+  }
+
+});
+
+describe("Gets state from localstorage", () => {
+
+  const asks: Ask[] = [
+    {
+      question: "Can I have a cookie?",
+      askee: "Mom",
+      id: cuid(),
+      timestamp: Date.now(),
+      status: AskStatus.Rejected
+    },
+    {
+      question: "Can I have a games console?",
+      askee: "Dad",
+      id: cuid(),
+      timestamp: Date.now(),
+      status: AskStatus.Accepted
+    },
+    {
+      question: "Can I have a games raise?",
+      askee: "Boss",
+      id: cuid(),
+      timestamp: Date.now(),
+      status: AskStatus.Unanswered
+    }
+  ];
+
+  for (const ask of asks) {
+    test(ask.question, () => {
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ asks }));
+
+      const {
+        getAskByQuestionText,
+        getAskStatusByQuestionText,
+        countRenderedAsks,
+        getAskeeByQuestionText,
+        getDateByQuestionText,
+      } = setup();
+
+      expect(countRenderedAsks()).toEqual(3)
+
+      // Check question rendered
+      const renderedAsk = getAskByQuestionText(ask.question);
+      expect(renderedAsk).toBeInTheDocument();
+
+      // Check status correct
+      expect(getAskStatusByQuestionText(ask.question)).toEqual(ask.status);
+
+      // Check askee
+      expect(getAskeeByQuestionText(ask.question)).toEqual(ask.askee);
+
+      // Check date
+      const dateElement = getDateByQuestionText(ask.question);
+      expect(dateElement!.getAttribute("datetime"))
+        .toEqual((new Date(ask.timestamp)).toString());
+
+    });
+  }
 
 });
