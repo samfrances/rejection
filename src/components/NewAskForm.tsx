@@ -52,12 +52,14 @@ export default function NewAskForm({ onSubmitAsk }: Props) {
         placeholder="What do you want to ask for?"
         value={question}
         onChange={e => { setQuestion(e.target.value); }}
+        className="question-input"
         data-testid={TestIDs.QuestionInput} />
       <input
         type="text"
         placeholder="Who are you asking?"
         value={askee}
         onChange={e => { setAskee(e.target.value); }}
+        className="askee-input"
         data-testid={TestIDs.AskeeInput} />
       <input
         type="submit"

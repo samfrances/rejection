@@ -14,3 +14,11 @@
 input {
     margin: 0 10px;
 }
+
+.question-input {
+    width: 40%;
+}
+
+.askee-input {
+    width: 20%;
+}
