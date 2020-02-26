@@ -12,6 +12,7 @@ function setup() {
 
   const { getByTestId, container, getByText } = render(<App />);
 
+  const appContainer = () => container.querySelector(".App");
   const titleElement = () => getByTestId(TestIDs.Title);
   const newAskForm = () => container.querySelector(`form[data-testid="${TestIDs.NewAskForm}"]`);
   const asksList = () => getByTestId(TestIDs.AsksList);
@@ -81,6 +82,7 @@ function setup() {
   return {
     getByText,
 
+    appContainer,
     titleElement,
     newAskForm,
     asksList,
@@ -365,7 +367,7 @@ test("stores state in localStorage", () => {
 
 });
 
-describe("Gets state from localstorage", () => {
+describe("gets state from localStorage", () => {
 
   const asks: Ask[] = [
     {
@@ -423,5 +425,104 @@ describe("Gets state from localstorage", () => {
 
     });
   }
+
+});
+
+describe("falls back gracefully if cannot get state from localStorage", () => {
+
+  function assertFallsBackGracefully() {
+    const { appContainer, countRenderedAsks } = setup();
+    expect(appContainer()).toBeInTheDocument();
+    expect(countRenderedAsks()).toBe(0);
+  }
+
+  test("when no entry exists", () => {
+    localStorage.clear();
+    assertFallsBackGracefully();
+  });
+
+  test("when the entry is invalid JSON", () => {
+    localStorage.setItem(STORAGE_KEY, "hhsd;;24j");
+    assertFallsBackGracefully();
+  });
+
+  test("when the entry doesn't contain asks key", () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({}));
+    assertFallsBackGracefully();
+  });
+
+  test("when the asks key doesn't contain an array", () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ asks: {}}));
+    assertFallsBackGracefully();
+  });
+
+  describe("when state contains invalid asks", () => {
+
+    const asks: Ask[] = [
+      {
+        question: "Can I have a cookie?",
+        askee: "Mom",
+        id: cuid(),
+        timestamp: Date.now(),
+        status: AskStatus.Rejected
+      },
+      {
+        question: "Can I have a games console?",
+        askee: 5555,
+        id: cuid(),
+        timestamp: Date.now(),
+        status: AskStatus.Accepted
+      } as unknown as Ask,
+      {
+        question: "Can I have a games raise?",
+        askee: "Boss",
+        id: cuid(),
+        // Missing timestamp
+        status: AskStatus.Unanswered
+      } as Ask,
+      {
+        question: "Can I have a games raise?",
+        askee: "Boss",
+        id: cuid(),
+        timestamp: Date.now(),
+        status: AskStatus.Unanswered
+      }
+    ];
+
+    for (const ask of [asks[0], asks[3]]) {
+      test(ask.question, () => {
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ asks }));
+
+        const {
+          appContainer,
+          countRenderedAsks,
+          getAskByQuestionText,
+          getAskeeByQuestionText,
+          getAskStatusByQuestionText,
+          getDateByQuestionText
+        } = setup();
+        expect(appContainer()).toBeInTheDocument();
+        expect(countRenderedAsks()).toBe(2);
+
+        // Check question rendered
+        const renderedAsk = getAskByQuestionText(ask.question);
+        expect(renderedAsk).toBeInTheDocument();
+
+        // Check status correct
+        expect(getAskStatusByQuestionText(ask.question)).toEqual(ask.status);
+
+        // Check askee
+        expect(getAskeeByQuestionText(ask.question)).toEqual(ask.askee);
+
+        // Check date
+        const dateElement = getDateByQuestionText(ask.question);
+        expect(dateElement!.getAttribute("datetime"))
+          .toEqual((new Date(ask.timestamp)).toString());
+
+      });
+    }
+
+  })
 
 });

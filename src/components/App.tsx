@@ -47,20 +47,33 @@ export default function App() {
  * Load state from Localstorage
  */
 function init(initialState: AsksState): AsksState {
+
   const data = localStorage.getItem(STORAGE_KEY);
+
+  // Fallback if there is no data
   if (!data) {
     console.log("No saved state to load.")
     return initialState;
   }
 
   const errorMessage = "Saved state was invalid.";
-  const asksUnvalidated: Ask[] = JSON.parse(data).asks;
+
+  // Fallback if not valid JSON
+  let asksUnvalidated: Ask[];
+  try {
+    asksUnvalidated = JSON.parse(data).asks;
+  } catch (e) {
+    console.error(errorMessage)
+    return initialState;
+  }
+
+  // Fallback if ask key not present
   if (asksUnvalidated === undefined) {
     console.error(errorMessage);
     return initialState;
   }
 
-  // Check if stored asks are any array
+  // Fallback if asks is not an array
   if (typeof asksUnvalidated.filter !== "function") {
     console.error(errorMessage);
     return initialState;
@@ -69,14 +82,17 @@ function init(initialState: AsksState): AsksState {
   // Filter out any invalid entries
   const asks = asksUnvalidated.filter(isAsk);
 
-  if (asks.length < 1 && asksUnvalidated.length > 0) {
-    console.error(errorMessage);
-    return initialState;
+  // Log if there are invalid asks
+  if (asks.length < asksUnvalidated.length) {
+    console.error(
+      `Could not load complete state. ${asksUnvalidated.length - asks.length} invalid Asks.`);
   }
 
+  // Reconstruct state
   const actions = asks.map(ask => fromActions.createAsk(ask));
   const state = actions.reduce(reducer, initialState);
 
   console.log("Reconstructed state from storage successfully.")
   return state;
+
 }
