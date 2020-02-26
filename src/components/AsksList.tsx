@@ -15,30 +15,28 @@ export default function AsksList({ asks, reject, accept }: Props) {
   return (
     <div data-testid={TestIDs.AsksList} className="asks-list">
       <table>
+        {
+          asks.length < 1
+            ? null
+            : <Header />
+        }
+
         <tbody>
         {
           asks.map(ask => (
             <tr key={ask.id} className="ask" data-testid={`ask=${ask.id}`}>
               <td className="ask-question">{ask.question}</td>
               <td className="ask-askee">{ask.askee}</td>
-              <td className="ask-date">{new Date(ask.timestamp).toLocaleString()}</td>
+              <td className="ask-date">
+                <FormattedDate timestamp={ask.timestamp} />
+              </td>
               <td className={`ask-status ${ask.status}`}>
                 {
                   ask.status === AskStatus.Unanswered
-                    ? (
-                      <React.Fragment>
-                        <button
-                          className="accept"
-                          onClick={() => { accept(ask.id); }}>
-                            Accept
-                        </button>
-                        <button
-                          className="reject"
-                          onClick={() => { reject(ask.id); }}>
-                            Reject
-                        </button>
-                      </React.Fragment>
-                    )
+                    ? <AcceptRejectButtons
+                        askId={ask.id}
+                        accept={accept}
+                        reject={reject} />
                     : ask.status
                 }
               </td>
@@ -48,5 +46,47 @@ export default function AsksList({ asks, reject, accept }: Props) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function Header() {
+  return (
+    <thead data-testid={TestIDs.AsksListHeader}>
+      <tr>
+        <th>Question</th>
+        <th>Askee</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+  );
+}
+
+function AcceptRejectButtons({
+  askId,
+  accept,
+  reject
+}: { askId: string} & Pick<Props, "accept"|"reject">) {
+  return (
+    <React.Fragment>
+      <button
+        className="accept"
+        onClick={() => { accept(askId); }}>
+          Accept
+      </button>
+      <button
+        className="reject"
+        onClick={() => { reject(askId); }}>
+          Reject
+      </button>
+    </React.Fragment>
+  );
+}
+
+function FormattedDate({ timestamp }: { timestamp: number }) {
+  return (
+    <React.Fragment>
+      {new Date(timestamp).toLocaleString()}
+    </React.Fragment>
   );
 }

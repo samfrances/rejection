@@ -4,6 +4,7 @@ import { render, fireEvent } from "@testing-library/react";
 
 import AsksList from "./AsksList";
 import { Ask, AskStatus } from "../common/types";
+import { TestIDs } from "./constants";
 
 const asks: Ask[] = [
   {
@@ -29,12 +30,14 @@ const asks: Ask[] = [
   }
 ];
 
-function setup() {
+function setup(asksList: Ask[] = asks) {
   const accept = jest.fn();
   const reject = jest.fn();
 
   const { container, getByText, getByTestId } =
-    render(<AsksList asks={asks} reject={reject} accept={accept} />);
+    render(<AsksList asks={asksList} reject={reject} accept={accept} />);
+
+  const asksListHeader = () => container.querySelector(`thead[data-testid="${TestIDs.AsksListHeader}"]`);
 
   const renderedAsks = () => container.querySelectorAll(".ask");
   const renderedAsk = (askId: string) => getByTestId(`ask=${askId}`);
@@ -61,6 +64,7 @@ function setup() {
     accept,
     reject,
 
+    asksListHeader,
     renderedAsks,
     renderedAskee,
     renderedAskDate,
@@ -71,6 +75,36 @@ function setup() {
     getByText
   };
 }
+
+test("should not render the table header if there are no asks", () => {
+
+  const { asksListHeader } = setup([]);
+  expect(asksListHeader()).toBeNull();
+
+});
+
+test("should render the table header if there is at least one ask", () => {
+
+  const { asksListHeader } = setup();
+  expect(asksListHeader()).not.toBeNull();
+
+});
+
+test("table header should contain the expected headings", () => {
+
+  const { asksListHeader } = setup();
+
+  const headings =
+    [ ...asksListHeader()!.querySelector("tr")!.children ]
+    .map(el => el.textContent);
+
+  expect(headings).toHaveLength(4);
+
+  expect(headings[0]).toEqual("Question");
+  expect(headings[1]).toEqual("Askee");
+  expect(headings[2]).toEqual("Date");
+  expect(headings[3]).toEqual("Status");
+});
 
 test("renders the right number of asks", () => {
   const { renderedAsks } = setup();
