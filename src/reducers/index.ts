@@ -5,7 +5,7 @@ import { AskStatus } from "../common/ask";
 type Ask = import("../common/ask").Ask;
 type AsksAction = import("../actions").AsksAction
 
-interface AsksState {
+export interface AsksState {
     byId: {
         [id: string]: Ask;
     };

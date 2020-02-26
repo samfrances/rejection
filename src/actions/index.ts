@@ -15,13 +15,14 @@ export type AsksAction =
 export const CREATE_ASK: "REJECTION/CREATE_ASK" = "REJECTION/CREATE_ASK";
 export const createAsk =
     new ActionCreatorBuilder(CREATE_ASK)
-        .withPayloadFactory<Ask, Optional<Omit<Ask, "status">, "timestamp"|"id">>(
+        .withPayloadFactory<Ask, Optional<Ask, "timestamp"|"id"|"status">>(
             ({
                 question,
                 askee,
                 timestamp = Date.now(),
-                id = cuid()
-            }) => ({ question, askee, timestamp, id, status: AskStatus.Unanswered })
+                id = cuid(),
+                status = AskStatus.Unanswered
+            }) => ({ question, askee, timestamp, id, status })
         )
         .build();
 

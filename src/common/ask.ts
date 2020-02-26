@@ -5,12 +5,34 @@ export enum AskStatus {
     Unanswered = "Unanswered",
 }
 
+function isAskStatus(potentialAskStatus: any): potentialAskStatus is AskStatus {
+  switch(potentialAskStatus) {
+    case AskStatus.Accepted:
+    case AskStatus.Rejected:
+    case AskStatus.Unanswered:
+      return true;
+    default:
+      return false;
+  }
+}
+
 export interface Ask {
   id: string;
   timestamp: number;
   question: string;
   askee: string;
   status: AskStatus;
+}
+
+export function isAsk(potentialAsk: any): potentialAsk is Ask {
+  const { id, question, askee, timestamp, status} = potentialAsk;
+  return Boolean(
+    typeof id === "string"
+    && typeof question === "string"
+    && typeof askee === "string"
+    && typeof timestamp === "number"
+    && isAskStatus(status)
+  );
 }
 
 function sum(nums: number[]) {
