@@ -5,6 +5,7 @@
 
 .errors {
     color: red;
+    min-height: 4em;
 }
 
 .ask-date {
