@@ -66,6 +66,8 @@ function setup() {
   };
 }
 
+afterEach(() => localStorage.clear());
+
 test("renders rejection app header", () => {
   const { titleElement } = setup();
 
