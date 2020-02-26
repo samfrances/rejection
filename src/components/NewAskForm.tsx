@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 
 interface Props {
-  onSubmitAsk: (question: string, askee: string) => void
+  onSubmitAsk: (question: string, askee: string) => void;
 }
 
 export default function NewAskForm({ onSubmitAsk }: Props) {
@@ -25,18 +25,18 @@ export default function NewAskForm({ onSubmitAsk }: Props) {
     const questionError =
       question.length < 3
         ? "Question must be at least 3 characters long"
-        : ""
+        : "";
 
     const askeeError =
       askee.length < 3
         ? "Askee must be at least 3 characters long"
-        : ""
+        : "";
 
     setQuestionError(questionError);
     setAskeeError(askeeError);
 
     return !(questionError || askeeError);
-  }
+  };
 
   return (
     <form

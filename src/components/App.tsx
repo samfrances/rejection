@@ -21,7 +21,7 @@ function App() {
       </div>
       <div className="row">
         <div className="twelve columns">
-          <AsksList />
+          <AsksList asks={[]} reject={() => {}} accept={() => {}} />
         </div>
       </div>
     </div>
