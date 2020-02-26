@@ -1,5 +1,6 @@
 .asks-list table {
     margin: 0 auto;
+    min-width: 80%;
 }
 
 .Accepted {
