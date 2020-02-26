@@ -75,6 +75,13 @@ To get credit, you must [open an issue](https://github.com/learn-javascript-cour
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### Todo
+
+- [x] Basic level
+- [ ] Mid level
+- [ ] Advanced level
+- [ ] Extra credit
+
 ### Available Scripts
 
 In the project directory, you can run:
