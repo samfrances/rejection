@@ -78,6 +78,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ### Todo
 
 - [x] Basic level
+- [x] Save and restore state to/from localStorage
 - [ ] Mid level
 - [ ] Advanced level
 - [ ] Extra credit
