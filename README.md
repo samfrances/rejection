@@ -79,6 +79,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 - [x] Basic level
 - [x] Save and restore state to/from localStorage
+- [ ] Streaks and streak-based scoring
 - [ ] Mid level
 - [ ] Advanced level
 - [ ] Extra credit
